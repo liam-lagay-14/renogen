@@ -9,12 +9,12 @@ describe Renogen::ExtractionStratagies::YamlFile::Reader do
     let(:file_contents) { { 'Foo' => 'Bar' }.to_json  }
 
     before :each do
-      allow(Dir).to receive(:glob).with([File.join(directory_path, 'next', "*.yml")]).and_return(['foo_file'])
+      allow(Dir).to receive(:glob).with([File.join(directory_path, 'next', '**/*.yml')]).and_return(['foo_file'])
       allow(YAML).to receive(:load_file).with('foo_file').and_return(file_contents)
     end
 
     it 'yields each yaml file within given directory' do
-      expect{ |b| subject.each_yaml_file(&b) }.to yield_with_args(file_contents)
+      expect{ |b| subject.each_yaml_file(&b) }.to yield_with_args(file_contents, 'foo_file')
     end
   end
 end

@@ -1,3 +1,34 @@
+# NEXT
+
+## New Feature
+### Rules For Changelog Entries
+
+Renogen now comes with a simple rule validator which allows to check changelog item files to be validated against a
+specific ruleset. See the [README](README.md#Rules) for details.
+
+## Breaking Changes
+### Refactored Command Line Parser
+
+Instead of `OptionParser`, this version uses `Thor` to parse the command line argumentes. This comes with a slight
+change in the way the `renogen` command can be used to generate the changelog.
+
+Before
+
+    renogen SOME_VERSION_STRING
+
+The new version of renogen will not recognize `SOME_VERSION_STRING` as such. You may use the following commands
+instead:
+
+    renogen -- SOME_VERSION_STRING
+
+    renogen generate SOME_VERSION_STRING
+
+The other commands `init` and `new` are not affected by this change.
+
+## Improvement
+
+Feature note files can be stored in subdirectories of the next version directory.
+
 # 1.2.1
 ## Minor Improvement
 * Added newlines to html format
