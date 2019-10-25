@@ -1,1 +1,46 @@
 changelog_path: './change_log/'
+file_rules:
+  "bugs/**/*.yml":
+    keys:
+      required:
+      - Details
+      optional:
+      - Dependencies
+  "changes/**/*.yml":
+    keys:
+      required:
+      - Details
+      optional:
+      - Dependencies
+  group_rules:
+    Details:
+      type: Hash
+      keys:
+        required:
+        - Ticket
+        - Description
+        - Deploy Tasks
+        - Migrations
+        - Product
+        - Country
+      items:
+        Ticket:
+          type: String
+        Description:
+          type: String
+        Deploy Tasks:
+          type: Array
+          items:
+            type: String
+        Migrations:
+          type: Array
+          items:
+            type: String
+        Product:
+          type: Array
+          items:
+            type: String
+        Country:
+          type: Array
+          items:
+            type: String

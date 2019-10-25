@@ -26,7 +26,35 @@ module Renogen
       # @param change [String]
       # @return [String]
       def write_change(change)
+        return format_output(change) if change.is_a? Hash
+
         "* #{change}"
+      end
+
+      def format_output(change)
+        output = ''
+        change.each_with_index do |(key, value), idx|
+          content = (value.is_a? Array) ? create_indented_section(value) : value
+          if idx.zero?
+            output += "* #{key}: #{content}\n"
+          else
+            output += "    * #{key}: #{content}\n"
+          end
+        end
+        output + "\n"
+      end
+
+      def create_indented_section(value)
+        content = "\n"
+        value.each do |val|
+          next if text_already_appears?(content, val)
+          content += "        * #{val} \n"
+        end
+        content
+      end
+
+      def text_already_appears?(content, value)
+        content.include?(value)
       end
     end
   end

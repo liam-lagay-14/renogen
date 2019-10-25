@@ -35,7 +35,7 @@ module Renogen
       # Iterator for each item within the change
       def each
         change.each do |item|
-          yield item.to_s
+          yield (item.is_a? Hash) ? item : item.to_s
         end
       end
 
