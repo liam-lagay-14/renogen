@@ -15,7 +15,10 @@ module Renogen
       changelog = extraction_stratagy.extract
       changelog.version = version
       changelog.date = options['release_date']
+      validate_headings = options['validate_headings']
 
+      require 'pry'; binding.pry
+      validator.validate!(changelog) if validate_headings
       writer.write!(changelog)
     end
 
@@ -31,6 +34,10 @@ module Renogen
 
     def formatter
       Renogen::Formatters.obtain(output_format, options)
+    end
+
+    def validator
+      Renogen::ChangeLog::Validator.new(formatter)
     end
   end
 end
