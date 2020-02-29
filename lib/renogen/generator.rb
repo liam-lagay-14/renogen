@@ -16,9 +16,9 @@ module Renogen
       changelog.version = version
       changelog.date = options['release_date']
       validate_headings = options['validate_headings']
+      validation_properties = options['validation_properties']
 
-      require 'pry'; binding.pry
-      validator.validate!(changelog) if validate_headings
+      validator.validate!(changelog) if validation_required?
       writer.write!(changelog)
     end
 
@@ -38,6 +38,10 @@ module Renogen
 
     def validator
       Renogen::ChangeLog::Validator.new(formatter)
+    end
+
+    def validation_required?
+      options['validate_headings'] && options['validation_properties']
     end
   end
 end

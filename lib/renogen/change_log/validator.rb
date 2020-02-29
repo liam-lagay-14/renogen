@@ -5,13 +5,14 @@ module Renogen
       def initialize(formatter)
         @formatter = formatter
         @validate_headings = formatter.options['validate_headings']
+        @validation_properties = formatter.options['validation_properties']
       end
 
       # Writes out the change log
       #
       # @param changelog [ChangeLog::Model]
       def validate!(changelog)
-        require 'pry'; binding.pry
+        validate_release_note_headings(changelog)
         # puts formatter.write_header(formatter.header(changelog))
         # output_groups(changelog.groups)
         # puts formatter.write_footer(changelog)
@@ -19,23 +20,35 @@ module Renogen
 
       protected
 
-      attr_reader :formatter, :validate_headings
+      attr_reader :formatter, :validate_headings, :validation_properties
 
-      # def output_change(change)
-      #   if change.list?
-      #     change.each { |item| puts formatter.write_change(item) }
-      #   else
-      #     puts formatter.write_change(change.to_s) if change.to_s.size > 0
-      #   end
-      # end
+      def validate_release_note_headings(changelog)
+        items_to_validate = changelog.items
+          .select { |item| validate_headings.include?(item.group_name) }
 
-      # def output_groups(groups)
-      #   groups.each do |group, changes|
-      #     puts formatter.write_group(group)
-      #     changes.each { |change| output_change(change) }
-      #     puts formatter.write_group_end
-      #   end
-      # end
+        return if items_to_validate.empty?
+
+        validate_properties(changelog)
+      end
+
+      private
+
+      def validate_properties(changelog)
+        invalid_items = []
+        validate_headings.each do |heading|
+          valid_properties = validation_properties[heading.downcase]
+
+          items_to_select = changelog.items.select { |log| log.group_name == heading }
+          invalid_items << items_to_select.reject { |item| (changes_to_validate(item.change) - valid_properties).empty? }
+        end
+        invalid_items = invalid_items.flatten
+        raise Renogen::Exceptions::InvalidItemFound.new(invalid_items) unless invalid_items.empty?
+      end
+
+      def changes_to_validate(change)
+        return [change] if change.is_a? String
+        change
+      end
     end
   end
 end
