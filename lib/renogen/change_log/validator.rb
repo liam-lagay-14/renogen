@@ -33,6 +33,8 @@ module Renogen
         validations.each do |heading, values|
           items_to_select = changelog.items.select { |log| log.group_name == heading }
           invalid_values = items_to_select.map { |i| (changes_to_validate(i.change) - values) }.flatten.uniq
+          next if invalid_values.empty?
+
           invalid_items << { invalid_value: invalid_values, valid_values: values, group_name: heading }
         end
 
