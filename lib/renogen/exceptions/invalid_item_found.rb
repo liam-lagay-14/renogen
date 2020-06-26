@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Renogen
   module Exceptions
     # Raised when an extraction stratagy for a given key can not be found
@@ -14,9 +16,7 @@ module Renogen
       # @return [String]
       def message
         message = "Invalid items: \n\n"
-        invalid_items.each do |item|
-          message << "Group: #{item.group_name}, Content: #{item.change}\n"
-        end
+        invalid_items.each { |item| message << "Group: #{item.group_name}, Content: #{item.change}\n" }
         message
       end
     end

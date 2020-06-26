@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Renogen
   # This is the conductor of the application
   class Generator
     attr_accessor :source, :version, :output_format, :options
 
-    def initialize(version, source, output_format, options={})
+    def initialize(version, source, output_format, options = {})
       @version = version
       @source = source
       @output_format = output_format
@@ -15,8 +17,6 @@ module Renogen
       changelog = extraction_stratagy.extract
       changelog.version = version
       changelog.date = options['release_date']
-      validate_headings = options['validate_headings']
-      validation_properties = options['validation_properties']
 
       validator.validate!(changelog) if validation_required?
       writer.write!(changelog)
@@ -41,7 +41,7 @@ module Renogen
     end
 
     def validation_required?
-      options['validate_headings'] && options['validation_properties']
+      options['validate_headings'].any? && options['validation_properties'].any?
     end
   end
 end
