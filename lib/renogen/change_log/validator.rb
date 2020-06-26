@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Renogen
   module ChangeLog
     # Validates the change log
@@ -13,9 +15,6 @@ module Renogen
       # @param changelog [ChangeLog::Model]
       def validate!(changelog)
         validate_release_note_headings(changelog)
-        # puts formatter.write_header(formatter.header(changelog))
-        # output_groups(changelog.groups)
-        # puts formatter.write_footer(changelog)
       end
 
       protected
@@ -23,8 +22,7 @@ module Renogen
       attr_reader :formatter, :validate_headings, :validation_properties
 
       def validate_release_note_headings(changelog)
-        items_to_validate = changelog.items
-          .select { |item| validate_headings.include?(item.group_name) }
+        items_to_validate = changelog.items.select { |item| validate_headings.include?(item.group_name) }
 
         return if items_to_validate.empty?
 
@@ -39,14 +37,17 @@ module Renogen
           valid_properties = validation_properties[heading.downcase]
 
           items_to_select = changelog.items.select { |log| log.group_name == heading }
-          invalid_items << items_to_select.reject { |item| (changes_to_validate(item.change) - valid_properties).empty? }
+          invalid_items << items_to_select.reject do |item|
+            (changes_to_validate(item.change) - valid_properties).empty?
+          end
         end
         invalid_items = invalid_items.flatten
-        raise Renogen::Exceptions::InvalidItemFound.new(invalid_items) unless invalid_items.empty?
+        raise(Renogen::Exceptions::InvalidItemFound, invalid_items) unless invalid_items.empty?
       end
 
       def changes_to_validate(change)
         return [change] if change.is_a? String
+
         change
       end
     end

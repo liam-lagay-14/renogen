@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Renogen
   # Custom exceptions throw by the libary
   module Exceptions

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Renogen
   module Formatters
     # Implements a template pattern that forces the implemention of required
