@@ -15,9 +15,9 @@ module Renogen
       #
       # @return [String]
       def message
-        message = "Invalid items: \n\n"
-        invalid_items.each { |item| message << "Group: #{item.group_name}, Content: #{item.change}\n" }
-        message
+        messages = ['Invalid items:']
+        invalid_items.each { |item| messages << "Group: #{item.group_name}, Content: #{item.change}" }
+        messages.join("\n")
       end
     end
   end
