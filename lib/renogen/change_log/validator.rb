@@ -21,6 +21,7 @@ module Renogen
       attr_reader :formatter, :validations
 
       def validate_headings(changelog)
+        return if validations.nil?
         return if changelog.items.none? { |item| validations.key?(item.group_name) }
 
         validate_properties(changelog)
