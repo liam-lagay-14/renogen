@@ -21,8 +21,7 @@ module Renogen
       options['changelog_path'] ||= config_instance.changelog_path
       options['old_version'] ||= config_instance.changelog_path
       options['release_date'] ||= Date.today
-      options['validate_headings'] ||= config_instance.validate_headings
-      options['validation_properties'] ||= config_instance.validation_properties
+      options['validations'] ||= config_instance.validations
 
       begin
         generator = Renogen::Generator.new(version, source, format, options)

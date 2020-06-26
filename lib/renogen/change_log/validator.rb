@@ -6,25 +6,22 @@ module Renogen
     class Validator
       def initialize(formatter)
         @formatter = formatter
-        @validate_headings = formatter.options['validate_headings']
-        @validation_properties = formatter.options['validation_properties']
+        @validations = formatter.options['validations']
       end
 
       # Writes out the change log
       #
       # @param changelog [ChangeLog::Model]
       def validate!(changelog)
-        validate_release_note_headings(changelog)
+        validate_headings(changelog)
       end
 
       protected
 
-      attr_reader :formatter, :validate_headings, :validation_properties
+      attr_reader :formatter, :validations
 
-      def validate_release_note_headings(changelog)
-        items_to_validate = changelog.items.select { |item| validate_headings.include?(item.group_name) }
-
-        return if items_to_validate.empty?
+      def validate_headings(changelog)
+        return if changelog.items.none? { |item| validations.key?(item.group_name) }
 
         validate_properties(changelog)
       end
@@ -33,14 +30,12 @@ module Renogen
 
       def validate_properties(changelog)
         invalid_items = []
-        validate_headings.each do |heading|
-          valid_properties = validation_properties[heading.downcase]
-
+        validations.each do |heading, values|
           items_to_select = changelog.items.select { |log| log.group_name == heading }
-          invalid_items << items_to_select.reject do |item|
-            (changes_to_validate(item.change) - valid_properties).empty?
-          end
+          invalid_values = items_to_select.map { |i| (changes_to_validate(i.change) - values) }.flatten.uniq
+          invalid_items << { invalid_value: invalid_values, valid_values: values, group_name: heading }
         end
+
         invalid_items = invalid_items.flatten
         raise(Renogen::Exceptions::InvalidItemFound, invalid_items) unless invalid_items.empty?
       end
