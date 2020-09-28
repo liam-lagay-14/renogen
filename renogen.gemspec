@@ -19,4 +19,6 @@ Gem::Specification.new do |s|
 
   # Required development dependencies
   s.add_development_dependency 'rspec', '~> 3.0'
+  s.add_dependency 'pry'
+  s.add_dependency 'pry-byebug'
 end

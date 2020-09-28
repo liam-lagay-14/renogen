@@ -11,6 +11,7 @@ module Renogen
       # @param changelog [ChangeLog::Model]
       def write!(changelog)
         puts formatter.write_header(formatter.header(changelog)) unless formatter.write_header(formatter.header(changelog)).nil?
+        changelog = sort_changelog(changelog, config.sort_order, formatter.table_formatter?) unless config.sort_order.nil?
         if formatter.table_formatter?
           write_by_table!(changelog)
         else
@@ -59,6 +60,10 @@ module Renogen
         return changes unless config.remove_duplicates
 
         changes.uniq { |c| c.to_s }
+      end
+
+      def sort_changelog(changelog, sort_order, is_table_formatter)
+        Renogen::ChangeLog::Sorter.new(changelog, sort_order, is_table_formatter).sort_changelog
       end
 
       private

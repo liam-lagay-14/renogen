@@ -22,6 +22,7 @@ module Renogen
       options['old_version'] ||= config_instance.changelog_path
       options['release_date'] ||= Date.today
       options['allowed_values'] ||= config_instance.validations
+      options['sort_order'] ||= config_instance.sort_order
 
       begin
         generator = Renogen::Generator.new(version, source, format, options)

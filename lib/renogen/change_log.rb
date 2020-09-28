@@ -6,5 +6,6 @@ module Renogen
     require_relative 'change_log/writer'
     require_relative 'change_log/model'
     require_relative 'change_log/validator'
+    require_relative 'change_log/sorter'
   end
 end
